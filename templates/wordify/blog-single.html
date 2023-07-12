@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="site-section py-lg">
+    <div class="container">
+        <div class="row blog-entries element-animate">
+            <div class="col-md-12 col-lg-8 main-content">
+                <img src="{{ object.image.url }}" alt="Image" class="img-fluid mb-5">
+                <div class="post-meta">
+                        <span class="author mr-2"><img src="{{ object.author.avatar.url }}" alt="Colorlib"
+                                                       class="mr-2"> Colorlib</span>&bullet;
+                    <span class="mr-2">{{ object.created_date|date:"F d, Y" }}</span> &bullet;
+                    <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
+                </div>
+                <h1 class="mb-4">{{ object.title }}</h1>
+                <a class="category mb-5" href="#">{{ object.category }}</a>
+                <div class="post-content-body">
+                    <p>{{ object.description }}</p>
+
+
+
+                    <div class="row mb-5">
+                        {% for image in object.subcontent.subcontentimage.all %}
+                        <div class="{%if image.is_wide == True %}col-md-12 mb-2{%else%}col-md-6 mb-4{%endif%}">
+                            <img src="{{ image.images.url }}" alt="Image placeholder" class="img-fluid">
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <p>{{ object.subcontent.sub_content }}</p>
+                </div>
+                <div class="pt-5">
+                    <p>Categories:
+                        <a href="#">{{ object.category }}</a>
+                        Tags:
+                        {% for tag in object.tags.all %}
+                        <a href="#" class="tag-cloud-link">{{ tag.title }}</a>
+
+                        {% endfor %}
+                    </p>
+                </div>
+
+                <div class="pt-5" id="comment_list">
+                    <h3 class="mb-5">{{ object.comment_set.count }} comments </h3>
+                    <ul class="comment-list">
+                        {% for comment in object.comment_set.all %}
+                        <li class="comment">
+                            <div class="vcard">
+                                {% if comment.author.avatar %}
+                                <img src="{{ comment.author.avatar.url }}" alt="Image placeholder">
+                                {% else %}
+                                <img src="{% static 'images/user.png' %}" alt="Image placeholder">
+                                {% endif %}
+                            </div>
+                            <div class="comment-body">
+                                <h3>{{ comment.author }}</h3>
+                                <div class="meta"></div>
+                                <p>{{ comment.description }}</p>
+                                <p><a href="#" class="reply rounded">Reply</a></p>
+                            </div>
+                        </li>
+                        {% endfor %}
+
+                    </ul>
+
+                    <div class="comment-form-wrap pt-5">
+                        <h3 class="mb-5">Leave a comment</h3>
+                        <form action="#comment_list" method="post" class="p-5 bg-light">
+                           {% csrf_token %}
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                {{ form.description }}
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Post Comment" class="btn btn-primary">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            {% include 'sitebar.html' %}
+
+        </div>
+    </div>
+</section>
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="mb-3 ">Related Post</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-lg-4">
+                <a href="#" class="a-block sm d-flex align-items-center height-md"
+                   style="background-image: url({% static 'images/img_2.jpg' %}); ">
+                    <div class="text">
+                        <div class="post-meta">
+                            <span class="category">Lifestyle</span>
+                            <span class="mr-2">March 15, 2018 </span> &bullet;
+                            <span class="ml-2"><span class="fa fa-comments"></span> 3</span>
+                        </div>
+                        <h3>There’s a Cool New Way for Men to Wear Socks and Sandals</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
